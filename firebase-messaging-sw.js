@@ -5,15 +5,16 @@
 importScripts('https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js');
 importScripts('https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging-compat.js');
 
-// Firebase Configuration - Replace with your config
+// Firebase Configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyBMJuAmIAqDUXhZcGBHq8CszhJL92VaZ64",
-  authDomain: "information-project1.firebaseapp.com",
-  databaseURL: "https://information-project1-default-rtdb.firebaseio.com",
-  projectId: "information-project1",
-  storageBucket: "information-project1.firebasestorage.app",
-  messagingSenderId: "1098270976013",
-  appId: "1:1098270976013:web:2e1ca7602b316b6ed30d44",
+    apiKey: "AIzaSyBMJuAmIAqDUXhZcGBHq8CszhJL92VaZ64",
+    authDomain: "information-project1.firebaseapp.com",
+    databaseURL: "https://information-project1-default-rtdb.firebaseio.com",
+    projectId: "information-project1",
+    storageBucket: "information-project1.firebasestorage.app",
+    messagingSenderId: "1098270976013",
+    appId: "1:1098270976013:web:2e1ca7602b316b6ed30d44",
+    measurementId: "G-YFL07VDXCX"
 };
 
 // Initialize Firebase
