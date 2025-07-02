@@ -183,7 +183,7 @@
   storageBucket: "information-project1.firebasestorage.app",
   messagingSenderId: "1098270976013",
   appId: "1:1098270976013:web:2e1ca7602b316b6ed30d44",
-};
+        };
 
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
@@ -238,7 +238,7 @@
             try {
                 // Register service worker
                 if ('serviceWorker' in navigator) {
-                    const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
+                    const registration = await navigator.serviceWorker.register('./firebase-messaging-sw.js');
                     messaging.useServiceWorker(registration);
                 }
 
@@ -411,7 +411,7 @@
 
         // Service Worker Registration for background notifications
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/firebase-messaging-sw.js')
+            navigator.serviceWorker.register('./firebase-messaging-sw.js')
                 .then((registration) => {
                     console.log('Service Worker registered:', registration);
                 })
