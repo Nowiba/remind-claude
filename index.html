@@ -222,58 +222,91 @@
 
         // Request notification permission
         async function requestNotificationPermission() {
+            console.log('Requesting notification permission...');
+            
             if ('Notification' in window) {
                 const permission = await Notification.requestPermission();
+                console.log('Permission result:', permission);
+                
                 if (permission === 'granted') {
                     document.getElementById('notificationPermission').classList.add('hidden');
                     showStatus('Notifications enabled successfully!', 'success');
-                    initializeMessaging();
+                    
+                    // Test notification
+                    setTimeout(() => {
+                        showNotification('✅ Test', 'Notifications are working!');
+                    }, 1000);
+                    
                 } else {
                     showStatus('Notifications permission denied.', 'error');
                 }
+            } else {
+                showStatus('Notifications not supported in this browser.', 'error');
             }
         }
 
         // Initialize Firebase Messaging
         async function initializeMessaging() {
             try {
-                // Register service worker first
-                if ('serviceWorker' in navigator) {
-                    const registration = await navigator.serviceWorker.register('./firebase-messaging-sw.js');
-                    console.log('Service Worker registered successfully:', registration);
-                }
+                console.log('Initializing messaging...');
+                
+                // Skip FCM token for now to avoid service worker conflicts
+                // The app will work with local notifications
+                console.log('Using local notifications only');
 
-                // Get FCM token (only if you have VAPID key configured)
+                // Listen for foreground messages (if FCM is set up later)
                 try {
-                    fcmToken = await messaging.getToken({
-                        vapidKey: 'BF0XL6TATWEVgiN1aZwrPws32D4AAxabxdRs0zXbKSarbfPlCIxpXjMC2F5ap52xFLDnP_TAYmInDPIM6vgzmeQ'
+                    messaging.onMessage((payload) => {
+                        console.log('Foreground message received:', payload);
+                        showNotification(payload.notification.title, payload.notification.body);
                     });
-                    console.log('FCM Token:', fcmToken);
-                } catch (tokenError) {
-                    console.log('FCM token not available (VAPID key needed):', tokenError);
-                    // App will still work with local notifications
+                } catch (error) {
+                    console.log('FCM messaging not available, using local notifications');
                 }
-
-                // Listen for foreground messages
-                messaging.onMessage((payload) => {
-                    console.log('Foreground message received:', payload);
-                    showNotification(payload.notification.title, payload.notification.body);
-                });
 
             } catch (error) {
                 console.error('Error initializing messaging:', error);
-                // App will still work with local notifications even if FCM fails
+                console.log('Continuing with local notifications only');
             }
         }
 
         // Show notification
         function showNotification(title, body) {
+            console.log('Attempting to show notification:', title, body);
+            
             if (Notification.permission === 'granted') {
-                new Notification(title, {
+                // For mobile compatibility, use simpler options
+                const options = {
                     body: body,
-                    icon: '🤖',
-                    badge: '📅'
-                });
+                    icon: './icon.png', // Use your uploaded icon
+                    badge: './icon.png',
+                    tag: 'appointment-notification',
+                    requireInteraction: true,
+                    vibrate: [200, 100, 200],
+                    silent: false
+                };
+                
+                try {
+                    const notification = new Notification(title, options);
+                    
+                    notification.onclick = function() {
+                        window.focus();
+                        notification.close();
+                    };
+                    
+                    // Auto close after 10 seconds
+                    setTimeout(() => notification.close(), 10000);
+                    
+                    console.log('Notification created successfully');
+                } catch (error) {
+                    console.error('Error creating notification:', error);
+                    // Fallback: show browser alert
+                    alert(`${title}: ${body}`);
+                }
+            } else {
+                console.log('Notification permission not granted');
+                // Fallback: show browser alert
+                alert(`${title}: ${body}`);
             }
         }
 
@@ -355,13 +388,18 @@
             const title = '✅ Appointment Confirmed';
             const body = `Your appointment is confirmed for ${appointmentDate.toLocaleString()}`;
             
+            console.log('Sending confirmation notification...');
+            
             // Update database
-            await database.ref('appointments/' + appointmentId + '/confirmationSent').set(true);
+            try {
+                await database.ref('appointments/' + appointmentId + '/confirmationSent').set(true);
+            } catch (error) {
+                console.error('Error updating database:', error);
+            }
             
             // Show local notification
             showNotification(title, body);
             
-            // You can also send to FCM here if you have a backend service
             console.log('Confirmation notification sent for:', appointmentId);
         }
 
@@ -370,8 +408,14 @@
             const title = '⏰ Appointment Reminder';
             const body = `Your appointment is in 30 minutes (${appointmentDate.toLocaleString()})`;
             
+            console.log('Sending reminder notification...');
+            
             // Update database
-            await database.ref('appointments/' + appointmentId + '/reminderSent').set(true);
+            try {
+                await database.ref('appointments/' + appointmentId + '/reminderSent').set(true);
+            } catch (error) {
+                console.error('Error updating database:', error);
+            }
             
             // Show local notification
             showNotification(title, body);
