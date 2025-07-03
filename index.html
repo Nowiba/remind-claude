@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Appointment Booking</title>
+    <title>Book Your Appointment</title>
     <style>
         * {
             margin: 0;
@@ -22,86 +22,108 @@
         }
 
         .container {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
+            background: white;
             border-radius: 20px;
-            padding: 40px;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
             width: 100%;
             max-width: 500px;
+            animation: slideUp 0.8s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px 20px;
             text-align: center;
         }
 
-        .logo {
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(45deg, #667eea, #764ba2);
-            border-radius: 50%;
-            margin: 0 auto 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-            color: white;
-        }
-
-        h1 {
-            color: #333;
+        .header h1 {
+            font-size: 2.5rem;
             margin-bottom: 10px;
-            font-size: 2rem;
+            font-weight: 300;
         }
 
-        .subtitle {
-            color: #666;
-            margin-bottom: 40px;
+        .header p {
+            opacity: 0.9;
             font-size: 1.1rem;
+        }
+
+        .form-container {
+            padding: 40px 30px;
         }
 
         .form-group {
             margin-bottom: 25px;
-            text-align: left;
         }
 
-        label {
+        .form-group label {
             display: block;
             margin-bottom: 8px;
             color: #333;
-            font-weight: 600;
+            font-weight: 500;
+            font-size: 1.1rem;
         }
 
-        input[type="text"], input[type="datetime-local"] {
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
             width: 100%;
             padding: 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
+            border: 2px solid #e1e5e9;
+            border-radius: 12px;
             font-size: 1rem;
-            transition: border-color 0.3s ease;
-            background: rgba(255, 255, 255, 0.8);
+            transition: all 0.3s ease;
+            background: #f8f9fa;
         }
 
-        input[type="text"]:focus, input[type="datetime-local"]:focus {
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
             outline: none;
             border-color: #667eea;
+            background: white;
             box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
 
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
         .btn {
-            background: linear-gradient(45deg, #667eea, #764ba2);
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
-            padding: 15px 30px;
-            border-radius: 50px;
+            border-radius: 12px;
             font-size: 1.1rem;
-            font-weight: 600;
+            font-weight: 500;
             cursor: pointer;
             transition: all 0.3s ease;
-            width: 100%;
-            margin-top: 20px;
+            position: relative;
+            overflow: hidden;
         }
 
         .btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn:active {
+            transform: translateY(0);
         }
 
         .btn:disabled {
@@ -110,39 +132,51 @@
             transform: none;
         }
 
-        .notification {
+        .notification-status {
+            background: #e8f5e8;
+            border: 2px solid #4caf50;
+            border-radius: 12px;
             padding: 15px;
-            border-radius: 10px;
-            margin: 20px 0;
-            font-weight: 500;
-            display: none;
-        }
-
-        .success {
-            background: rgba(76, 175, 80, 0.1);
-            border: 2px solid #4CAF50;
+            margin-bottom: 20px;
+            text-align: center;
             color: #2e7d32;
+            font-weight: 500;
         }
 
-        .error {
-            background: rgba(244, 67, 54, 0.1);
-            border: 2px solid #f44336;
+        .notification-status.error {
+            background: #ffebee;
+            border-color: #f44336;
             color: #c62828;
         }
 
-        .info {
-            background: rgba(33, 150, 243, 0.1);
-            border: 2px solid #2196F3;
-            color: #1565c0;
+        .notification-status.warning {
+            background: #fff3e0;
+            border-color: #ff9800;
+            color: #ef6c00;
+        }
+
+        .success-message {
+            background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            margin-top: 20px;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
         }
 
         .loading {
             display: inline-block;
             width: 20px;
             height: 20px;
-            border: 3px solid rgba(255, 255, 255, 0.3);
+            border: 2px solid #ffffff;
             border-radius: 50%;
-            border-top-color: #fff;
+            border-top-color: transparent;
             animation: spin 1s ease-in-out infinite;
             margin-right: 10px;
         }
@@ -151,367 +185,280 @@
             to { transform: rotate(360deg); }
         }
 
-        .appointment-list {
-            margin-top: 30px;
-            text-align: left;
-        }
-
-        .appointment-item {
-            background: rgba(102, 126, 234, 0.1);
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 10px;
-            border-left: 4px solid #667eea;
-        }
-
         @media (max-width: 600px) {
             .container {
-                padding: 30px 20px;
+                margin: 10px;
+                border-radius: 15px;
             }
             
-            h1 {
-                font-size: 1.5rem;
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .form-container {
+                padding: 30px 20px;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="logo">🗓️</div>
-        <h1>AI Appointment Booking</h1>
-        <p class="subtitle">Schedule your appointment and get smart notifications</p>
+        <div class="header">
+            <h1>📅 Book Appointment</h1>
+            <p>Schedule your appointment with ease</p>
+        </div>
         
-        <div id="notification" class="notification"></div>
-        
-        <form id="appointmentForm">
-            <div class="form-group">
-                <label for="name">Your Name</label>
-                <input type="text" id="name" name="name" required placeholder="Enter your full name">
+        <div class="form-container">
+            <div id="notificationStatus" class="notification-status" style="display: none;">
+                <span id="statusText"></span>
             </div>
             
-            <div class="form-group">
-                <label for="appointmentTime">Appointment Date & Time</label>
-                <input type="datetime-local" id="appointmentTime" name="appointmentTime" required>
-            </div>
+            <form id="appointmentForm">
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                
+
+                
+                <div class="form-group">
+                    <label for="date">Appointment Date</label>
+                    <input type="date" id="date" name="date" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="time">Appointment Time</label>
+                    <input type="time" id="time" name="time" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="service">Service Type</label>
+                    <select id="service" name="service" required>
+                        <option value="">Select Service</option>
+                        <option value="consultation">Consultation</option>
+                        <option value="checkup">General Checkup</option>
+                        <option value="treatment">Treatment</option>
+                        <option value="follow-up">Follow-up</option>
+                    </select>
+                </div>
+                
+
+                
+                <button type="submit" class="btn" id="submitBtn">
+                    <span id="btnText">Book Appointment</span>
+                </button>
+            </form>
             
-            <button type="submit" class="btn" id="submitBtn">
-                Book Appointment
-            </button>
-        </form>
-        
-        <div id="appointmentsList" class="appointment-list"></div>
+            <div id="successMessage" style="display: none;"></div>
+        </div>
     </div>
 
-    <!-- Firebase SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-messaging-compat.js"></script>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-messaging-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database-compat.js"></script>
 
     <script>
-        // Firebase Configuration - Replace with your config
+        // Firebase Configuration
         const firebaseConfig = {
-    apiKey: "AIzaSyBMJuAmIAqDUXhZcGBHq8CszhJL92VaZ64",
-  authDomain: "information-project1.firebaseapp.com",
-  databaseURL: "https://information-project1-default-rtdb.firebaseio.com",
-  projectId: "information-project1",
-  storageBucket: "information-project1.firebasestorage.app",
-  messagingSenderId: "1098270976013",
-  appId: "1:1098270976013:web:2e1ca7602b316b6ed30d44",
-  measurementId: "G-YFL07VDXCX"
+            apiKey: "AIzaSyBMJuAmIAqDUXhZcGBHq8CszhJL92VaZ64",
+            authDomain: "information-project1.firebaseapp.com",
+            databaseURL: "https://information-project1-default-rtdb.firebaseio.com",
+            projectId: "information-project1",
+            storageBucket: "information-project1.firebasestorage.app",
+            messagingSenderId: "1098270976013",
+            appId: "1:1098270976013:web:2e1ca7602b316b6ed30d44",
+            measurementId: "G-YFL07VDXCX"
         };
 
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
+        const messaging = firebase.messaging();
         const database = firebase.database();
-        let messaging;
 
-        // Initialize messaging if supported
-        if ('serviceWorker' in navigator && 'PushManager' in window) {
-            messaging = firebase.messaging();
-        }
+        // VAPID Key
+        const vapidKey = "BF0XL6TATWEVgiN1aZwrPws32D4AAxabxdRs0zXbKSarbfPlCIxpXjMC2F5ap52xFLDnP_TAYmInDPIM6vgzmeQ";
+
+        // Your backend URL (replace with your actual Render URL)
+        const BACKEND_URL = 'https://your-app-name.onrender.com'; // Replace with your actual backend URL
 
         // DOM Elements
         const form = document.getElementById('appointmentForm');
         const submitBtn = document.getElementById('submitBtn');
-        const notification = document.getElementById('notification');
-        const appointmentsList = document.getElementById('appointmentsList');
+        const btnText = document.getElementById('btnText');
+        const notificationStatus = document.getElementById('notificationStatus');
+        const statusText = document.getElementById('statusText');
+        const successMessage = document.getElementById('successMessage');
+        const dateInput = document.getElementById('date');
 
-        // Set minimum date to current date
-        const now = new Date();
-        const minDateTime = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
-        document.getElementById('appointmentTime').min = minDateTime;
+        // Set minimum date to today
+        const today = new Date().toISOString().split('T')[0];
+        dateInput.min = today;
 
-        // Notification functions
-        function showNotification(message, type = 'info') {
-            notification.textContent = message;
-            notification.className = `notification ${type}`;
-            notification.style.display = 'block';
-            
-            setTimeout(() => {
-                notification.style.display = 'none';
-            }, 5000);
-        }
-
-        // Request notification permission
+        // Request notification permission and get FCM token
         async function requestNotificationPermission() {
-            if (!('Notification' in window)) {
-                showNotification('This browser does not support notifications', 'error');
-                return false;
-            }
-
-            if (Notification.permission === 'granted') {
-                return true;
-            }
-
-            if (Notification.permission !== 'denied') {
-                const permission = await Notification.requestPermission();
-                return permission === 'granted';
-            }
-
-            return false;
-        }
-
-        // Get FCM token
-        async function getFCMToken() {
-            if (!messaging) return null;
-            
             try {
-                // Register service worker
-                const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
+                const permission = await Notification.requestPermission();
                 
-                const token = await messaging.getToken({
-                    vapidKey: 'BF0XL6TATWEVgiN1aZwrPws32D4AAxabxdRs0zXbKSarbfPlCIxpXjMC2F5ap52xFLDnP_TAYmInDPIM6vgzmeQ', // Replace with your VAPID key
-                    serviceWorkerRegistration: registration
-                });
-                
-                return token;
+                if (permission === 'granted') {
+                    const token = await messaging.getToken({ vapidKey });
+                    console.log('FCM Token:', token);
+                    
+                    showNotificationStatus('Notifications enabled! You\'ll receive appointment reminders.', 'success');
+                    
+                    // Store token in localStorage for later use
+                    localStorage.setItem('fcmToken', token);
+                    
+                    return token;
+                } else {
+                    showNotificationStatus('Please enable notifications to receive appointment reminders.', 'warning');
+                    return null;
+                }
             } catch (error) {
-                console.error('Error getting FCM token:', error);
+                console.error('Error getting notification permission:', error);
+                showNotificationStatus('Error setting up notifications. You can still book appointments.', 'error');
                 return null;
             }
         }
 
-        // Send push notification (fallback method)
-        function sendLocalNotification(title, body, scheduledTime) {
-            if ('Notification' in window && Notification.permission === 'granted') {
-                // Immediate notification (confirmation)
-                setTimeout(() => {
-                    new Notification(title, {
-                        body: body,
-                        icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="%23667eea"/><text x="50" y="60" font-size="40" text-anchor="middle" fill="white">🗓️</text></svg>',
-                        badge: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="%23667eea"/></svg>',
-                        tag: 'appointment-confirmation',
-                        requireInteraction: true
-                    });
-                }, 60000); // 1 minute delay
-
-                // Reminder notification (30 minutes before)
-                const reminderTime = new Date(scheduledTime).getTime() - (30 * 60 * 1000);
-                const currentTime = new Date().getTime();
-                
-                if (reminderTime > currentTime) {
-                    const timeUntilReminder = reminderTime - currentTime;
-                    setTimeout(() => {
-                        new Notification('Appointment Reminder', {
-                            body: `Your appointment is in 30 minutes at ${new Date(scheduledTime).toLocaleString()}`,
-                            icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="%23ff9800"/><text x="50" y="60" font-size="40" text-anchor="middle" fill="white">⏰</text></svg>',
-                            tag: 'appointment-reminder',
-                            requireInteraction: true
-                        });
-                    }, timeUntilReminder);
-                }
-            }
-        }
-
-        // Save appointment to Firebase
-        async function saveAppointment(appointmentData) {
-            try {
-                const appointmentRef = database.ref('appointments').push();
-                await appointmentRef.set({
-                    ...appointmentData,
-                    id: appointmentRef.key,
-                    createdAt: firebase.database.ServerValue.TIMESTAMP,
-                    status: 'confirmed'
-                });
-                
-                return appointmentRef.key;
-            } catch (error) {
-                console.error('Error saving appointment:', error);
-                throw error;
-            }
-        }
-
-        // Schedule notifications
-        function scheduleNotifications(appointmentData) {
-            const appointmentTime = new Date(appointmentData.appointmentTime).getTime();
-            const currentTime = new Date().getTime();
+        // Show notification status
+        function showNotificationStatus(message, type) {
+            statusText.textContent = message;
+            notificationStatus.className = `notification-status ${type}`;
+            notificationStatus.style.display = 'block';
             
-            // Confirmation notification after 1 minute
-            setTimeout(() => {
-                if ('Notification' in window && Notification.permission === 'granted') {
-                    new Notification('Appointment Confirmed! ✅', {
-                        body: `Hello ${appointmentData.name}! Your appointment on ${new Date(appointmentData.appointmentTime).toLocaleString()} has been confirmed.`,
-                        icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="%234CAF50"/><text x="50" y="60" font-size="30" text-anchor="middle" fill="white">✅</text></svg>',
-                        tag: 'appointment-confirmation',
-                        requireInteraction: true
-                    });
-                }
-            }, 60000); // 1 minute
-
-            // Reminder notification 30 minutes before appointment
-            const reminderTime = appointmentTime - (30 * 60 * 1000); // 30 minutes before
-            
-            if (reminderTime > currentTime) {
-                const timeUntilReminder = reminderTime - currentTime;
+            // Auto-hide after 5 seconds for success messages
+            if (type === 'success') {
                 setTimeout(() => {
-                    if ('Notification' in window && Notification.permission === 'granted') {
-                        new Notification('Appointment Reminder ⏰', {
-                            body: `Hi ${appointmentData.name}! Your appointment is in 30 minutes (${new Date(appointmentData.appointmentTime).toLocaleString()})`,
-                            icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="%23ff9800"/><text x="50" y="60" font-size="30" text-anchor="middle" fill="white">⏰</text></svg>',
-                            tag: 'appointment-reminder',
-                            requireInteraction: true,
-                            actions: [
-                                { action: 'confirm', title: 'I\'ll be there' },
-                                { action: 'reschedule', title: 'Reschedule' }
-                            ]
-                        });
-                    }
-                }, timeUntilReminder);
+                    notificationStatus.style.display = 'none';
+                }, 5000);
             }
         }
 
-        // Load appointments
-        async function loadAppointments() {
-            try {
-                const snapshot = await database.ref('appointments').orderByChild('createdAt').limitToLast(5).once('value');
-                const appointments = snapshot.val() || {};
-                
-                let html = '';
-                Object.values(appointments).reverse().forEach(appointment => {
-                    const date = new Date(appointment.appointmentTime);
-                    html += `
-                        <div class="appointment-item">
-                            <strong>${appointment.name}</strong><br>
-                            <small>${date.toLocaleString()}</small><br>
-                            <span style="color: #4CAF50;">✅ Confirmed</span>
-                        </div>
-                    `;
-                });
-                
-                if (html) {
-                    appointmentsList.innerHTML = '<h3 style="margin-bottom: 15px;">Recent Appointments</h3>' + html;
-                }
-            } catch (error) {
-                console.error('Error loading appointments:', error);
+        // Handle foreground messages
+        messaging.onMessage((payload) => {
+            console.log('Message received in foreground:', payload);
+            
+            // Show custom notification
+            if (payload.notification) {
+                showNotificationStatus(payload.notification.body, 'success');
             }
-        }
+        });
 
-        // Form submission
+        // Form submission handler
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
             
-            const name = document.getElementById('name').value.trim();
-            const appointmentTime = document.getElementById('appointmentTime').value;
-            
-            if (!name || !appointmentTime) {
-                showNotification('Please fill in all fields', 'error');
-                return;
-            }
-            
-            const selectedTime = new Date(appointmentTime);
-            const now = new Date();
-            
-            if (selectedTime <= now) {
-                showNotification('Please select a future date and time', 'error');
-                return;
-            }
-            
-            // Show loading
-            submitBtn.innerHTML = '<span class="loading"></span>Booking...';
+            // Show loading state
             submitBtn.disabled = true;
+            btnText.innerHTML = '<span class="loading"></span>Booking...';
             
             try {
-                // Request notification permission
-                const hasPermission = await requestNotificationPermission();
-                if (!hasPermission) {
-                    showNotification('Please allow notifications to receive appointment reminders', 'error');
-                    return;
-                }
-                
-                // Get FCM token (for advanced push notifications)
-                const fcmToken = await getFCMToken();
-                
+                // Get form data
+                const formData = new FormData(form);
                 const appointmentData = {
-                    name,
-                    appointmentTime,
-                    fcmToken,
-                    userAgent: navigator.userAgent,
-                    timestamp: new Date().toISOString()
+                    name: formData.get('name'),
+                    date: formData.get('date'),
+                    time: formData.get('time'),
+                    service: formData.get('service'),
+                    timestamp: Date.now(),
+                    fcmToken: localStorage.getItem('fcmToken')
                 };
                 
-                // Save to Firebase
-                const appointmentId = await saveAppointment(appointmentData);
+                // Validate appointment date/time
+                const appointmentDateTime = new Date(`${appointmentData.date}T${appointmentData.time}`);
+                const now = new Date();
                 
-                // Schedule notifications
-                scheduleNotifications(appointmentData);
+                if (appointmentDateTime <= now) {
+                    throw new Error('Please select a future date and time for your appointment.');
+                }
+                
+                // Save to Firebase Realtime Database
+                const appointmentRef = database.ref('appointments').push();
+                await appointmentRef.set(appointmentData);
+                
+                // Send data to backend for notification scheduling
+                if (appointmentData.fcmToken) {
+                    await fetch(`${BACKEND_URL}/schedule-notifications`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            appointmentId: appointmentRef.key,
+                            ...appointmentData
+                        })
+                    });
+                }
                 
                 // Show success message
-                showNotification(`Appointment booked successfully! You'll receive a confirmation in 1 minute and a reminder 30 minutes before your appointment.`, 'success');
+                showSuccessMessage(appointmentData);
                 
                 // Reset form
                 form.reset();
                 
-                // Reload appointments list
-                loadAppointments();
-                
             } catch (error) {
                 console.error('Error booking appointment:', error);
-                showNotification('Error booking appointment. Please try again.', 'error');
+                showNotificationStatus(error.message || 'Error booking appointment. Please try again.', 'error');
             } finally {
-                submitBtn.innerHTML = 'Book Appointment';
+                // Reset button state
                 submitBtn.disabled = false;
+                btnText.textContent = 'Book Appointment';
             }
         });
 
-        // Initialize app
-        async function initApp() {
-            // Request notification permission on load
-            await requestNotificationPermission();
-            
-            // Load recent appointments
-            loadAppointments();
-            
-            // Show initial info
-            showNotification('Welcome! Book your appointment and get smart notifications.', 'info');
-        }
-
-        // Start the app when page loads
-        document.addEventListener('DOMContentLoaded', initApp);
-
-        // Handle messaging when app is in foreground
-        if (messaging) {
-            messaging.onMessage((payload) => {
-                console.log('Message received: ', payload);
-                showNotification(payload.notification.title + ': ' + payload.notification.body, 'info');
+        // Show success message
+        function showSuccessMessage(appointmentData) {
+            const appointmentDate = new Date(`${appointmentData.date}T${appointmentData.time}`);
+            const formattedDate = appointmentDate.toLocaleDateString('en-US', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
             });
+            const formattedTime = appointmentDate.toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            
+            successMessage.innerHTML = `
+                <h3>🎉 Appointment Booked Successfully!</h3>
+                <p><strong>Date:</strong> ${formattedDate}</p>
+                <p><strong>Time:</strong> ${formattedTime}</p>
+                <p><strong>Service:</strong> ${appointmentData.service}</p>
+                <p style="margin-top: 15px;">
+                    📱 You'll receive a confirmation notification in 1 minute<br>
+                    🔔 We'll remind you 30 minutes before your appointment
+                </p>
+            `;
+            successMessage.style.display = 'block';
+            
+            // Hide form
+            form.style.display = 'none';
+            
+            // Show form again after 10 seconds
+            setTimeout(() => {
+                form.style.display = 'block';
+                successMessage.style.display = 'none';
+            }, 10000);
         }
 
-        // Service Worker registration and notification handling
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', () => {
+            // Request notification permission when page loads
+            requestNotificationPermission();
+        });
+
+        // Service Worker Registration
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/firebase-messaging-sw.js')
-                .then((registration) => {
-                    console.log('Service Worker registered successfully');
-                })
-                .catch((error) => {
-                    console.log('Service Worker registration failed:', error);
-                });
-                
-            // Handle notification clicks
-            navigator.serviceWorker.addEventListener('message', event => {
-                if (event.data && event.data.type === 'NOTIFICATION_CLICK') {
-                    // Handle notification click
-                    window.focus();
-                }
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/firebase-messaging-sw.js')
+                    .then((registration) => {
+                        console.log('SW registered: ', registration);
+                    })
+                    .catch((registrationError) => {
+                        console.log('SW registration failed: ', registrationError);
+                    });
             });
         }
     </script>
