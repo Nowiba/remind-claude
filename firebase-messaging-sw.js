@@ -27,8 +27,8 @@ messaging.onBackgroundMessage((payload) => {
     const notificationTitle = payload.notification.title || 'Appointment Reminder';
     const notificationOptions = {
         body: payload.notification.body,
-        icon: '/icon-192x192.png', // Add your app icon
-        badge: '/badge-72x72.png', // Add your app badge
+        icon: '/icon-192x192.png',
+        badge: '/badge-72x72.png',
         tag: 'appointment-notification',
         requireInteraction: true,
         actions: [
@@ -53,7 +53,6 @@ self.addEventListener('notificationclick', (event) => {
     event.notification.close();
     
     if (event.action === 'view') {
-        // Open the app
         event.waitUntil(
             clients.openWindow('/')
         );
